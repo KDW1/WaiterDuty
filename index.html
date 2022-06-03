@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/eefa1d8796.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+  <section class="section has-background-primary">
+    <div class="container">
+      <h1 class="title is-size-1 has-text-white">
+        Waiter Duty Program
+      </h1>
+      <p class="subtitle is-size-5 has-text-white">
+        A website that makes organizing <strong class="has-text-white">Waiter Duty Rosters</strong> easier!
+      </p>
+    </div>
+  </section>
+  <section class="section has-background-white">
+    <div class="container">
+      <div class="columns">
+        <h1 class="title is-size-3">
+          Cadets:
+        </h1>
+      </div>
+      <div class="columns">
+        <div class="column">
+          <table class = "table is-hoverable">
+            <thead>
+              <tr>
+                <th>Cadet Name</th>
+                <th>Lunches</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+              </tr>
+            </thead>
+            <tfoot class = "has-background-light">
+              <tr>
+                <th>Example Cadet</th>
+                <th>|</th>
+                <th>1st</th>
+                <th>2nd</th>
+                <th>2nd</th>
+                <th>3rd</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="column"">
+          <button class="button is-rounded is-info js-modal-trigger" data-target="cadet-modal">
+            <span class = "icon">
+              <i class="fa-solid fa-plus"></i>
+            </span>
+          </button>"
+        </div>
+      </div>
+    </div>
+  </section>
+  <script type="text/javascript">
+    //From Bulma
+    document.addEventListener('DOMContentLoaded', () => {
+  // Functions to open and close a modal
+  function openModal($el) {
+    $el.classList.add('is-active');
+  }
+
+  function closeModal($el) {
+    $el.classList.remove('is-active');
+  }
+
+  function closeAllModals() {
+    (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+      closeModal($modal);
+    });
+  }
+
+  // Add a click event on buttons to open a specific modal
+  (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+    const modal = $trigger.dataset.target;
+    const $target = document.getElementById(modal);
+
+    $trigger.addEventListener('click', () => {
+      openModal($target);
+    });
+  });
+
+  // Add a click event on various child elements to close the parent modal
+  (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+    const $target = $close.closest('.modal');
+
+    $close.addEventListener('click', () => {
+      closeModal($target);
+    });
+  });
+
+  // Add a keyboard event to close all modals
+  document.addEventListener('keydown', (event) => {
+    const e = event || window.event;
+
+    if (e.keyCode === 27) { // Escape key
+      closeAllModals();
+    }
+  });
+});
+//From Bulma
+  </script>
+  <div class="modal" id="cadet-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Modal title</p>
+        <button class="delete" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <!-- Content ... -->
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-success">Save changes</button>
+        <button class="button">Cancel</button>
+      </footer>
+    </div>
+  </div>
+  </body>
+</html>
