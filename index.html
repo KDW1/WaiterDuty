@@ -21,49 +21,66 @@
             </p>
         </div>
     </div>
-        <div class="container">
-            <div class="row">
-                <h1 class="title col-3">
-                    Cadets:
-                </h1>
-            </div>
-            <div class="row">
-                <div class="col-8">
-                    <table class="table table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Cadet Name</th>
-                                <th>Lunches</th>
-                                <th>Monday</th>
-                                <th>Tuesday</th>
-                                <th>Thursday</th>
-                                <th>Friday</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody"
+    <div class="container">
+        <div class="row">
+            <h1 class="title col-3">
+                Cadets:
+            </h1>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Cadet Name</th>
+                            <th>Lunches</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"
 
                         </tbody>
-                        <tfoot class="has-background-light">
-                            <tr>
-                                <th>Example Cadet</th>
-                                <th>|</th>
-                                <th>1st</th>
-                                <th>2nd</th>
-                                <th>2nd</th>
-                                <th>3rd</th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="col-1">
-                    <button class="btn btn-primary rounded-circle" data-toggle="modal" data-target="#cadet-modal">
-                        <span class="icon">
-                            <i class="fa-solid fa-plus"></i>
-                        </span>
-                    </button>
-                </div>
+                    <tfoot class="has-background-light">
+                        <tr>
+                            <th>Example Cadet</th>
+                            <th>|</th>
+                            <th>1st</th>
+                            <th>2nd</th>
+                            <th>2nd</th>
+                            <th>3rd</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-1">
+                <button class="btn btn-primary rounded-circle" data-toggle="modal" data-target="#cadet-modal">
+                    <span class="icon">
+                        <i class="fa-solid fa-plus"></i>
+                    </span>
+                </button>
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-primary mt-2" onclick="generateWaiterRoster()">
+                    <span class="text-white is-size-4">
+                        Create Roster
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span id="warningText" class="text-danger is-size-6 ">
+                    Not Enough People to Fill Each Lunch Slot
+                </span>
+            </div>
+        </div>
+    </div>
         <div class="modal fade" id="cadet-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -116,7 +133,7 @@
                             </div>
                             <div class="row mb-2">
                                 <select id="thursLunch" class="form-select mb-3 pt-1 pb-1" aria-label="Default select example">
-                                    <option value="Daily Lunches" selected>Daily Lunches</option>
+                                    <option selected>Daily Lunches</option>
                                     <option value="1st Lunch">1st Lunch</option>
                                     <option value="2nd Lunch">2nd Lunch</option>
                                     <option value="3rd Lunch">3rd Lunch</option>
