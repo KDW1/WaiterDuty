@@ -1,8 +1,128 @@
 
+window.onbeforeunload = function () {
+    return "Do?";
+};
+
 let cadetList = [];
 
 let warningText = document.getElementById("warningText");
 warningText.style.display = "none";
+
+let deleteButtons = document.getElementsByClassName("delete-cell");
+
+//function updateDeleteButtons() {
+//    for (let j = 0; j < deleteButtons.length; j++) {
+//        deleteButtons[j.addEventListener("click", () => {
+//            let targetElement = event.target || event.srcElement;
+//            targetElement.parentNode.parentNode.remove();
+//            console.log("Deleting!");
+//        })
+//    }
+//}
+
+function presetCadetList() { //To be called from the console | 0 -> "Free Lunch Period" | 5 -> "Not Available"
+    console.log("\nLoading Preset Cadet List");
+    let gageS = new Cadet("Gage Smith", 1, 1, 2, 2);
+    let haoboS = new Cadet("Haobo Sun", 1, 3, 3, 3);
+    let kingdiorrW = new Cadet("King-Diorr Willsun", 1, 3, 3, 3);
+    let ericZ = new Cadet("Eric Zhao", 2, 1, 1, 5);
+    let justinC = new Cadet("Justin Cheung", 2, 2, 2, 5);
+    let ernestoU = new Cadet("Ernesto Urtusuatsegui", 2, 2, 5, 3);
+    let nathanielC = new Cadet("Nathaniel Caminero", 3, 3, 3, 5);
+    let beckettP = new Cadet("Beckett Payne",3 , 1, 5, 5);
+    let andrewD = new Cadet("Andrew Divine", 3, 2, 1, 2);
+    let lorenzoA = new Cadet("Lorenzo Alonzo", 5, 5, 1, 1);
+    let hermanH = new Cadet("Herman Habermann", 5, 5, 2, 5);
+    let jorgeX = new Cadet("Jorge Xacur", 5, 5, 5, 1);
+    let jeronimoC = new Cadet("Jeronimo Canales", 5, 5, 5, 1);
+    let alonsoP = new Cadet("Alonso Perochena", 5, 5, 5, 2);
+    let jakeD = new Cadet("Jake Dolan", 5, 5, 5, 5);
+    let diegoU = new Cadet("Diego Urtusuatsegui", 5, 5, 5, 5);
+    let boscoF = new Cadet("Bosco Fox", 5, 5, 5, 5);
+    cadetList.unshift(gageS, haoboS, kingdiorrW, ericZ, justinC, ernestoU, nathanielC, beckettP, andrewD, lorenzoA, hermanH);
+    cadetList.unshift(jorgeX, jeronimoC, alonsoP, jakeD, diegoU, boscoF);
+}
+
+function clearCadetList() {
+    console.log("\nClearing Cadet List");
+    cadetList = [];
+}
+function updateDeleteButtons() {
+    deleteButtons = document.getElementsByClassName("delete-cell");
+    console.log(`${deleteButtons.length} Delete Buttons`);
+    for (let j = 0; j < deleteButtons.length; j++) {
+        console.log(j);
+        console.log(deleteButtons[j].classList);
+        deleteButtons[j].addEventListener("click", () => {
+            let targetElement = event.target || event.srcElement;
+            let rowParent = targetElement.parentNode;
+            while (rowParent.tagName != "TR") {
+                rowParent = rowParent.parentNode;
+            }
+            cadetList.splice(cadetList.findIndex(rowParent.firstChild.innerText), 1);
+            rowParent.remove();
+        });
+    }
+}
+
+function returnLunchTime(inputedVal) {
+    switch (inputedVal) {
+        case "1st Lunch":
+            return 1;
+            break;
+        case "2nd Lunch":
+            return 2;
+            break;
+        case "3rd Lunch":
+            return 3;
+            break;
+        case "Free":
+            return 0;
+            break;
+        case "None Available":
+            return 5;
+            break;
+    }
+}
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+
+function clearTable() {
+    let tableBody = document.getElementById("tableBody");
+    tableBody.innerHTML = "";
+    cadetList = "";
+}
+function updateStudents() {
+    let tableBody = document.getElementById("tableBody");
+    localStorage.setItem("tableBodyContent", tableBody.innerHTML);
+    localStorage.setItem("Cadet List", JSON.stringify(cadetList));
+}
+
+function clearEntries() {
+    localStorage.setItem("tableBodyContent", "");
+    localStorage.setItem("Cadet List", "");
+}
+
+function viewPastEntries() {
+    let tableBodyContent = localStorage.getItem("tableBodyContent");
+    let tableBody = document.getElementById("pastEntries");
+    tableBody.innerHTML = tableBodyContent;
+}
+
+function loadStudents() {
+    let tableBodyContent = localStorage.getItem("tableBodyContent");
+    let tableBody = document.getElementById("tableBody");
+    cadetList = JSON.parse(localStorage.getItem("Cadet List"));
+    cadetList.forEach(() => {
+
+    });
+    tableBody.innerHTML = tableBodyContent;
+    console.log("Updating");
+    updateDeleteButtons();
+
+}
 
 function getCadetInfo() {
     //console.log("Testing...Testing...1.2.3...");
@@ -38,29 +158,37 @@ function getCadetInfo() {
         console.log(`Cadet ${cadetName}: ${monLunch} on Monday, ${tuesLunch} on Tuesday, ${thursLunch} on Thursday, ${friLunch} on Friday`);
         let tableBody = document.getElementById("tableBody");
         let row = document.createElement("tr");
+        console.log(row.tagName);
         let rowContent = `<th>${cadetName}</th><th>|</th><th>${monLunch}</th><th>${tuesLunch}</th><th>${thursLunch}</th><th>${friLunch}</th>`;
-        rowContent += "<th><button class='btn btn-sm rounded-circle px-2 btn-danger '><span class='icon'><i class='fa-solid fa-lg fa-xmark'></i></span></button></th>";
-        row.append(rowContent)
+        rowContent += "<th><button class='btn btn-sm rounded-circle px-2 btn-danger delete-cell'><span class='icon'><i class='fa-solid fa-lg fa-xmark'></i></span></button></th>";
+        row.append(rowContent);
         tableBody.innerHTML += rowContent;
+        updateDeleteButtons();
     } else if (canProceedFurther == false) {
         console.log("Error");
         alert("Modal Form failed. Have to complete all fields");
     }
 
     document.getElementById("cadetName").value = "";
-    document.getElementById("monLunch").value = "";
-    document.getElementById("tuesLunch").value = "";
-    document.getElementById("thursLunch").value = "";
-    document.getElementById("friLunch").value = "";
+    document.getElementById("monLunch").value = "Daily Lunches";
+    document.getElementById("tuesLunch").value = "Daily Lunches";
+    document.getElementById("thursLunch").value = "Daily Lunches";
+    document.getElementById("friLunch").value = "Daily Lunches";
 
     if (canProceedFurther) {
-        let monNumber = (monLunch == "Free") ? 0 : parseInt(monLunch[0]);
-        let tuesNumber = (tuesLunch == "Free") ? 0 : parseInt(tuesLunch[0]);
-        let thursNumber = (thursLunch == "Free") ? 0 : parseInt(thursLunch[0]);
-        let friNumber = (friLunch == "Free") ? 0 : parseInt(friLunch[0]);
-        let newCadet = new Cadet(cadetName, monNumber, tuesNumber, 0, thursNumber, friNumber);
+        let monNumber = returnLunchTime(monLunch);
+        let tuesNumber = returnLunchTime(tuesLunch);
+        let thursNumber = returnLunchTime(thursLunch);
+        let friNumber = returnLunchTime(friLunch);
+
+        console.log("Added a Cadet");
+        let newCadet = new Cadet(cadetName, monNumber, tuesNumber, thursNumber, friNumber);
         newCadet.printInfo();
+        updateDeleteButtons();
+        cadetList.unshift(newCadet);
     }
+
+
 
 }
 
@@ -72,9 +200,10 @@ class Cadet {
     shifts = [];
 
 
-    constructor(cadetName, mon, tues, wed, thurs, fri) {
+    constructor(cadetName, mon, tues, thurs, fri) {
         this.cadetName = cadetName;
-        this.lunchTimes.unshift(mon, tues, wed, thurs, fri);
+        this.lunchTimes.unshift(mon, tues, 0, thurs, fri);
+        this.shiftAmounts = 0;
         this.shifts = [];
     }
 
@@ -92,6 +221,9 @@ class Cadet {
                     break;
                 case 3:
                     console.log(`${this.cadetName} has 3rd Lunch on Day: ${i}`);
+                    break;
+                case 5:
+                    console.log(`${this.cadetName} has No Available Lunch on Day: ${i}`);
                     break;
             }
         }
@@ -118,15 +250,27 @@ class Day {
     }
 
     get firstLunchFull() {
-        return fullShifts(this.lunches.firstLunch, 3);
+        if (this.lunches.firstLunch.length == 3) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     get secondLunchFull() {
-        return fullShifts(this.lunches.secondLunch, 3);
+        if (this.lunches.secondLunch.length == 3) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     get thirdLunchFull() {
-        return fullShifts(this.lunches.thirdLunch, 3);
+        if (this.lunches.thirdLunch.length == 3) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     get day() {
@@ -349,8 +493,11 @@ week.unshift(mon, tues, wed, thur, fri);
 
 
 
-
-
+let canRepeat = true;
+function toggleRecursive() {
+    canRepeat = !canRepeat;
+    console.log("Can Repeat: ", canRepeat);
+}
 function AssignBreakfastShifts(cadetList, chosenWeek) {
     breakfastShift = chosenWeek.breakfast;
     for (let i = 0; i < cadetList.length; i++) {
@@ -368,7 +515,7 @@ function AssignBreakfastShifts(cadetList, chosenWeek) {
         }
     }
     if (Array.isArray(breakfastShift)) {
-        if (!fullShifts(breakfastShift, 5)) {
+        if (!fullShifts(breakfastShift, 5) && canRepeat) {
             AssignBreakfastShifts(cadetList, chosenWeek);
         }
     }
@@ -391,7 +538,7 @@ function AssignWednesdayShifts(cadetList, chosenWeek) {
         }
     }
     if (Array.isArray(wednesdayShift)) {
-        if (!fullShifts(wednesdayShift, 7)) {
+        if (!fullShifts(wednesdayShift, 7) && canRepeat) {
             AssignWednesdayShifts(cadetList, chosenWeek);
         }
     }
@@ -421,13 +568,13 @@ function AssignDinnerShifts(cadetList, chosenWeek) {
     let checkFirstDinner = !fullShifts(dinnerShift.firstDinner, 3);
     let checkSecondDinner = !fullShifts(dinnerShift.secondDinner, 2);
     if (Array.isArray(dinnerShift.firstDinner)) {
-        if (checkFirstDinner) {
+        if (checkFirstDinner && canRepeat) {
             AssignDinnerShifts(cadetList, chosenWeek);
             return;
         }
     }
     if (Array.isArray(dinnerShift.secondDinner)) {
-        if (checkSecondDinner) {
+        if (checkSecondDinner && canRepeat) {
             AssignDinnerShifts(cadetList, chosenWeek);
             return;
         }
@@ -444,13 +591,12 @@ function AssignDinnerShifts(cadetList, chosenWeek) {
 function AssignLunchShifts(cadetList, chosenWeek, currentDay) {
     lunchSections = chosenWeek.lunches;
     for (let i = 0; i < cadetList.length; i++) {
-        if (equalNumberOfShifts(cadetList) && (cadetList[i].shiftAmounts == baseShifts) && (cadetList[i].shiftAmounts != 0)) {
+        console.log("Assigning Lunch");
+        if (equalNumberOfShifts(cadetList) && (cadetList[i].shiftAmounts != 0)) {
             baseShifts++;
             console.log(`${baseShifts} is the base number of shifts at lunch`);
-            // console.log(cadetList);
         }
         // let lunchTime = cadetList[i].lunchTimes[bruh];
-        let lunchTime = 0;
         switch (cadetList[i].lunchTimes[currentDay]) {
             case 0:
                 if (!chosenWeek.firstLunchFull) {
@@ -504,16 +650,20 @@ function AssignLunchShifts(cadetList, chosenWeek, currentDay) {
     let firstFull = chosenWeek.firstLunchFull;
     let secondFull = chosenWeek.secondLunchFull;
     let thirdFull = chosenWeek.thirdLunchFull;
-    let enoughForFirst = hasEnoughToFillLunch(cadetList, 1, currentDay);
-    let enoughForSecond = hasEnoughToFillLunch(cadetList, 2, currentDay);
-    let enoughForThird = hasEnoughToFillLunch(cadetList, 3, currentDay);
     // console.log(`First Lunch has enough? Ans: ${enoughForFirst}. Full Shifts: ${firstLunchFull},\nSecond Lunch is ok? Ans: ${enoughForSecond}. Full Shifts: ${secondLunchFull},\nThird Lunch is ok? Ans: ${enoughForThird}. Full Shifts: ${thirdLunchFull}\n`);
-    let runFirstLunchAgain = !firstFull && enoughForFirst;
-    let runSecondLunchAgain = !secondFull && enoughForSecond;
-    let runThirdLunchAgain = !thirdFull && enoughForThird;
+    let runFirstLunchAgain = !firstFull;
+    let runSecondLunchAgain = !secondFull;
+    let runThirdLunchAgain = !thirdFull;
     let allOk = firstFull && secondFull && thirdFull;
     // console.log(`Should Run Again: 1st) ${runFirstLunchAgain}, 2nd) ${runSecondLunchAgain}, 3rd) ${runThirdLunchAgain}`);
-    if (runFirstLunchAgain || runSecondLunchAgain || runThirdLunchAgain) {
+    if (!allOk && canRepeat) {
+        if (runFirstLunchAgain) {
+            console.log("First Lunch Not Full");
+        } else if (runSecondLunchAgain) {
+            console.log("Second Lunch Not Full");
+        } else if (runThirdLunchAgain) {
+            console.log("Third Lunch Not Full");
+        }
         AssignLunchShifts(cadetList, chosenWeek, currentDay);
         return;
     }
@@ -560,6 +710,7 @@ function equalNumberOfShifts(cadetList) {
         return false;
     }
     if (variations == 0) {
+        console.log("\n\nEveryone has same number of shifts\n\n");
         return true;
     }
     if (!(variations != 0) && !(variations == 0)) {
@@ -570,6 +721,28 @@ function equalNumberOfShifts(cadetList) {
     }
 }
 
+function createRoster() {
+    for (let i = 0; i < 5; i++) {
+        if (i != 2) { //2 means that it is a Wednesday
+            shuffle(cadetList);
+            AssignLunchShifts(cadetList, week[i], i);
+            AssignBreakfastShifts(cadetList, week[i]);
+            AssignDinnerShifts(cadetList, week[i]);
+
+        } else if (i == 2) { //On Wednesday, a different set of shifts are made 
+            shuffle(cadetList);
+            AssignWednesdayShifts(cadetList, week[2]);
+            AssignBreakfastShifts(cadetList, week[2]);
+            AssignDinnerShifts(cadetList, week[2]);
+        }
+    }
+
+    for (let j = 0; j < 3; j++) {
+        console.log("\n\n\n\n\n\------------\n");
+        console.log(`${week[j].day} has: \n`);
+        week[j].displayAllShifts();
+    }
+}
 //for (let i = 0; i < 3; i++) {
 //    if (i != 2) { //2 means that it is a Wednesday
 //        shuffle(unitCadetsMonday);
@@ -625,37 +798,54 @@ function shuffle(array) { //From Stack Overflow ---------------------
 
 function generateWaiterRoster() {
     console.log("This would generate the roster");
+    for (let j = 0; j < cadetList.length; j++) {
+        console.log(`${cadetList[j].cadetName}`);
+    }
     let mondayFullLunches;
     let tuesdayFullLunches;
     let thursdayFullLunches;
     let fridayFullLunches;
-    for (let i = 0; i < 4; i++) {
-        firstLunchPossible = hasEnoughToFillLunch(cadetList, 1, i + 1);
-        secondLunchPossible = hasEnoughToFillLunch(cadetList, 2, i + 1);
-        thirdLunchPossible = hasEnoughToFillLunch(cadetList, 3, i + 1);
+    for (let i = 0; i < 5; i++) {
+        firstLunchPossible = hasEnoughToFillLunch(cadetList, 1, i);
+        secondLunchPossible = hasEnoughToFillLunch(cadetList, 2, i);
+        thirdLunchPossible = hasEnoughToFillLunch(cadetList, 3, i);
         switch (i) {
             case 0:
                 mondayFullLunches = firstLunchPossible && secondLunchPossible && thirdLunchPossible;
+                lunchesCovered(mondayFullLunches, i);
                 break;
             case 1:
                 tuesdayFullLunches = firstLunchPossible && secondLunchPossible && thirdLunchPossible;
+                lunchesCovered(tuesdayFullLunches, i);
                 break;
             case 2:
                 break;
             case 3:
                 thursdayFullLunches = firstLunchPossible && secondLunchPossible && thirdLunchPossible;
+                lunchesCovered(thursdayFullLunches, i);
                 break;
             case 4:
-                thursdayFullLunches = firstLunchPossible && secondLunchPossible && thirdLunchPossible;
+                fridayFullLunches = firstLunchPossible && secondLunchPossible && thirdLunchPossible;
+                lunchesCovered(fridayFullLunches, i);
                 break;
         }
     }
-    if (mondayFullLunches && tuesdayFullLunches && thursdayFullLunches && fridayFullLunches) {
+    let rosterPossible = mondayFullLunches && tuesdayFullLunches && thursdayFullLunches && fridayFullLunches;
+    if (rosterPossible) {
         warningText.style.display = "none";
+        createRoster();
     } else {
         warningText.style.display = "block";
         setTimeout(() => {
             warningText.style.display = "none";
         }, 2000);
+    }
+}
+
+function lunchesCovered(condition, dayNum) {
+    if (condition) {
+        console.log("Lunches all Covered on Day ", dayNum)
+    } else {
+        console.log("Not Enough Covered on Day ", dayNum)
     }
 }

@@ -1,0 +1,23 @@
+{
+  "name": "waiterduty",
+  "version": "1.0.0",
+  "description": "A website made for Culver Academies, where students will be able to make Waiter Duty Rosters in a simpler fashion",
+  "main": "main.js",
+  "scripts": {
+    "test": "runWaiterDuty"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KDW1/WaiterDuty.git"
+  },
+  "keywords": [
+    "culverAcademies",
+    "waiterDuty"
+  ],
+  "author": "King-Diorr W.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KDW1/WaiterDuty/issues"
+  },
+  "homepage": "https://github.com/KDW1/WaiterDuty#readme"
+}
