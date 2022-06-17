@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/KDW1/WaiterDuty/issues"
   },
-  "homepage": "https://github.com/KDW1/WaiterDuty#readme"
+  "homepage": "https://github.com/KDW1/WaiterDuty#readme",
+  "devDependencies": {
+    "g-sheets-api": "^2.1.2"
+  }
 }

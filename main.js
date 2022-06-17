@@ -10,16 +10,52 @@ warningText.style.display = "none";
 
 let deleteButtons = document.getElementsByClassName("delete-cell");
 
-//function updateDeleteButtons() {
-//    for (let j = 0; j < deleteButtons.length; j++) {
-//        deleteButtons[j.addEventListener("click", () => {
-//            let targetElement = event.target || event.srcElement;
-//            targetElement.parentNode.parentNode.remove();
-//            console.log("Deleting!");
-//        })
-//    }
-//}
+function getLunchTime(num) {
+    switch (num) {
+        case 0:
+            return "Free Period";
+        case 1:
+            return "1st Lunch";
+        case 2:
+            return "2nd Lunch";
+        case 3:
+            return "3rd Lunch";
+        case 5:
+            return "No Available Lunch"
+    }
+}
 
+function toggleDay(day) {
+    let cellsOfDay = document.getElementsByClassName(day);
+    console.log(`Day: ${day}`);
+    for (let i = 0; i < cellsOfDay.length; i++) {
+        if (cellsOfDay[i].classList.contains("text-white")) {
+            cellsOfDay[i].classList.remove("text-white");
+            cellsOfDay[i].classList.remove("bg-dark");
+        } else {
+            cellsOfDay[i].classList.add("text-white");
+            cellsOfDay[i].classList.add("bg-dark");
+
+        }
+    }
+}
+
+function createRowBasedOnCadet(cadet) {
+    let tableBody = document.getElementById("tableBody");
+    let row = document.createElement("tr");
+    row.id = cadet.cadetName;
+    console.log(row.tagName);
+    let rowContent = `<th class = "${cadet.cadetName}">${cadet.cadetName}</th><th>|</th>`;
+    let monContent = `<th class = "monday ${getLunchTime(cadet.lunchTimes[0]).replace(/ /g, "")}">${getLunchTime(cadet.lunchTimes[0])}</th>`;
+    let tuesContent = `<th class = "tuesday ${getLunchTime(cadet.lunchTimes[1]).replace(/ /g, "")}">${getLunchTime(cadet.lunchTimes[1])}</th>`;
+    let thursContent = `<th class = "thursday ${getLunchTime(cadet.lunchTimes[3]).replace(/ /g, "")}">${getLunchTime(cadet.lunchTimes[3])}</th>`;
+    let friContent = `<th class = "friday ${getLunchTime(cadet.lunchTimes[4]).replace(/ /g, "")}">${getLunchTime(cadet.lunchTimes[4])}</th>`;
+    rowContent += monContent + tuesContent + thursContent + friContent;
+    rowContent += "<th><button class='btn btn-sm rounded-circle px-2 btn-danger delete-cell'><span class='icon'><i class='fa-solid fa-lg fa-xmark'></i></span></button></th>";
+    row.append(rowContent);
+    tableBody.innerHTML += rowContent;
+    updateDeleteButtons();
+}
 function presetCadetList() { //To be called from the console | 0 -> "Free Lunch Period" | 5 -> "Not Available"
     console.log("\nLoading Preset Cadet List");
     let gageS = new Cadet("Gage Smith", 1, 1, 2, 2);
@@ -154,21 +190,6 @@ function getCadetInfo() {
 
     let canProceedFurther = proceedFurther;
 
-    if (canProceedFurther == true) {
-        console.log(`Cadet ${cadetName}: ${monLunch} on Monday, ${tuesLunch} on Tuesday, ${thursLunch} on Thursday, ${friLunch} on Friday`);
-        let tableBody = document.getElementById("tableBody");
-        let row = document.createElement("tr");
-        console.log(row.tagName);
-        let rowContent = `<th>${cadetName}</th><th>|</th><th>${monLunch}</th><th>${tuesLunch}</th><th>${thursLunch}</th><th>${friLunch}</th>`;
-        rowContent += "<th><button class='btn btn-sm rounded-circle px-2 btn-danger delete-cell'><span class='icon'><i class='fa-solid fa-lg fa-xmark'></i></span></button></th>";
-        row.append(rowContent);
-        tableBody.innerHTML += rowContent;
-        updateDeleteButtons();
-    } else if (canProceedFurther == false) {
-        console.log("Error");
-        alert("Modal Form failed. Have to complete all fields");
-    }
-
     document.getElementById("cadetName").value = "";
     document.getElementById("monLunch").value = "Daily Lunches";
     document.getElementById("tuesLunch").value = "Daily Lunches";
@@ -186,6 +207,11 @@ function getCadetInfo() {
         newCadet.printInfo();
         updateDeleteButtons();
         cadetList.unshift(newCadet);
+
+        createRowBasedOnCadet(newCadet);
+    } else if (canProceedFurther == false) {
+        console.log("Error");
+        alert("Modal Form failed. Have to complete all fields");
     }
 
 
@@ -376,17 +402,19 @@ class Day {
                 this.logShift(this.wednesday[i]);
             }
         }
-        for (let i = 0; i < 3; i++) {
-            console.log("First Lunch---------");
-            this.logShift(this.lunches.firstLunch[i]);
-        }
-        for (let i = 0; i < 3; i++) {
-            console.log("Second Lunch---------");
-            this.logShift(this.lunches.secondLunch[i]);
-        }
-        for (let i = 0; i < 3; i++) {
-            console.log("Third Lunch---------");
-            this.logShift(this.lunches.thirdLunch[i]);
+        if (this.day != "Wednesday") {
+            for (let i = 0; i < 3; i++) {
+                console.log("First Lunch---------");
+                this.logShift(this.lunches.firstLunch[i]);
+            }
+            for (let i = 0; i < 3; i++) {
+                console.log("Second Lunch---------");
+                this.logShift(this.lunches.secondLunch[i]);
+            }
+            for (let i = 0; i < 3; i++) {
+                console.log("Third Lunch---------");
+                this.logShift(this.lunches.thirdLunch[i]);
+            }
         }
         for (let i = 0; i < 3; i++) {
             console.log("First Dinner---------");
@@ -395,6 +423,19 @@ class Day {
         for (let i = 0; i < 2; i++) {
             console.log("Second Dinner---------");
             this.logShift(this.dinners.secondDinner[i]);
+        }
+    }
+
+    clearShifts() {
+        this.breakfast = [];
+        this.dinners.firstDinner = [];
+        this.dinners.secondDinner = [];
+        if (this.day == "Wednesday") {
+            this.wednesday = []
+        } else {
+            this.lunches.firstLunch = [];
+            this.lunches.secondLunch = [];
+            this.lunches.thirdLunch = [];
         }
     }
 }
@@ -494,6 +535,7 @@ week.unshift(mon, tues, wed, thur, fri);
 
 
 let canRepeat = true;
+
 function toggleRecursive() {
     canRepeat = !canRepeat;
     console.log("Can Repeat: ", canRepeat);
@@ -501,7 +543,7 @@ function toggleRecursive() {
 function AssignBreakfastShifts(cadetList, chosenWeek) {
     breakfastShift = chosenWeek.breakfast;
     for (let i = 0; i < cadetList.length; i++) {
-        if (equalNumberOfShifts(cadetList) && (cadetList[i].shiftAmounts == baseShifts) && (cadetList[i].shiftAmounts != 0)) {
+        if (metMinimumNumOfShifts(cadetList) && (cadetList[i].shiftAmounts == baseShifts) && (cadetList[i].shiftAmounts != 0)) {
             baseShifts++;
             console.log(`${baseShifts} is the base number of shifts at breakfast`);
             // console.log(cadetList);
@@ -524,7 +566,7 @@ function AssignBreakfastShifts(cadetList, chosenWeek) {
 function AssignWednesdayShifts(cadetList, chosenWeek) {
     wednesdayShift = chosenWeek.wednesday;
     for (let i = 0; i < cadetList.length; i++) {
-        if (equalNumberOfShifts(cadetList) && (cadetList[i].shiftAmounts == baseShifts) && (cadetList[i].shiftAmounts != 0)) {
+        if (metMinimumNumOfShifts(cadetList) && (cadetList[i].shiftAmounts == baseShifts) && (cadetList[i].shiftAmounts != 0)) {
             baseShifts++;
             console.log(`${baseShifts} is the base number of shifts at breakfast`);
             // console.log(cadetList);
@@ -547,7 +589,7 @@ function AssignWednesdayShifts(cadetList, chosenWeek) {
 function AssignDinnerShifts(cadetList, chosenWeek) {
     dinnerShift = chosenWeek.dinners;
     for (let i = 0; i < cadetList.length; i++) {
-        if (equalNumberOfShifts(cadetList) && (cadetList[i].shiftAmounts == baseShifts) && (cadetList[i].shiftAmounts != 0)) {
+        if (metMinimumNumOfShifts(cadetList) && (cadetList[i].shiftAmounts == baseShifts) && (cadetList[i].shiftAmounts != 0)) {
             baseShifts++;
             console.log(`${baseShifts} is the base number of shifts at dinner`);
             // console.log(cadetList);
@@ -585,34 +627,65 @@ function AssignDinnerShifts(cadetList, chosenWeek) {
 }
 
 
-
+function othersAvailableForLunch(chosenWeek, currentDay, lunch) {
+    let overworked = 0;
+    let peopleAvailable;
+    if (Array.isArray(cadetList)) {
+        for (let i = 0; i < cadetList.length; i++) {
+            if (i != 0) {
+                if ((cadetList[i].lunchTimes[currentDay] == lunch)) {
+                    peopleAvailable++;
+                }
+                if ((cadetList[i].shiftAmounts >= baseShifts) && (cadetList[i].lunchTimes[currentDay] == lunch)) {
+                    overworked++;
+                }
+            }
+        }
+    }
+    if (overworked >= peopleAvailable) {
+        return false;
+    }
+    if (overworked < peopleAvailable) {
+        return true;
+    }
+    if ((overworked == 0) && (peopleAvailable == 0)) {
+        return false;
+    }
+    else {
+        return;
+    }
+}
 
 
 function AssignLunchShifts(cadetList, chosenWeek, currentDay) {
     lunchSections = chosenWeek.lunches;
     for (let i = 0; i < cadetList.length; i++) {
         console.log("Assigning Lunch");
-        if (equalNumberOfShifts(cadetList) && (cadetList[i].shiftAmounts != 0)) {
+        if (metMinimumNumOfShifts(cadetList) && (cadetList[i].shiftAmounts != 0)) {
             baseShifts++;
             console.log(`${baseShifts} is the base number of shifts at lunch`);
         }
+        let overWorked = cadetList[i].shiftAmounts >= baseShifts;
+        let noOneLeftForFirst = !othersAvailableForLunch(chosenWeek, currentDay, 1);
+        let noOneLeftForSecond = !othersAvailableForLunch(chosenWeek, currentDay, 2);
+        let noOneLeftForThird = !othersAvailableForLunch(chosenWeek, currentDay, 3);
         // let lunchTime = cadetList[i].lunchTimes[bruh];
         switch (cadetList[i].lunchTimes[currentDay]) {
             case 0:
                 if (!chosenWeek.firstLunchFull) {
-                    if (cadetList[i].shiftAmounts < baseShifts) {
+                    if ((overWorked == false) || noOneLeftForFirst) {
                         chosenWeek.assignShift(2, 1, cadetList[i]);
                         // cadetList[i].shiftAmounts++;
                     }
                 }
                 if (!chosenWeek.secondLunchFull) {
-                    if (cadetList[i].shiftAmounts < baseShifts) {
+                    if ((overWorked == false) || noOneLeftForSecond) {
                         chosenWeek.assignShift(2, 2, cadetList[i]);
                         // cadetList[i].shiftAmounts++;
                     }
                 }
                 if (!chosenWeek.thirdLunchFull) {
-                    if (cadetList[i].shiftAmounts < baseShifts) {
+                    if ((overWorked == false) || noOneLeftForThird) {
                         chosenWeek.assignShift(2, 3, cadetList[i]);
                         // cadetList[i].shiftAmounts++;
                     }
@@ -620,7 +693,7 @@ function AssignLunchShifts(cadetList, chosenWeek, currentDay) {
                 break;
             case 1:
                 if (!chosenWeek.firstLunchFull) {
-                    if (cadetList[i].shiftAmounts < baseShifts) {
+                    if ((overWorked == false) || noOneLeftForFirst) {
                         chosenWeek.assignShift(2, 1, cadetList[i]);
                         // cadetList[i].shiftAmounts++;
                     }
@@ -628,7 +701,7 @@ function AssignLunchShifts(cadetList, chosenWeek, currentDay) {
                 break;
             case 2:
                 if (!chosenWeek.secondLunchFull) {
-                    if (cadetList[i].shiftAmounts < baseShifts) {
+                    if ((overWorked == false) || noOneLeftForSecond) {
                         chosenWeek.assignShift(2, 2, cadetList[i]);
                         // cadetList[i].shiftAmounts++;
                     }
@@ -636,7 +709,7 @@ function AssignLunchShifts(cadetList, chosenWeek, currentDay) {
                 break;
             case 3:
                 if (!chosenWeek.thirdLunchFull) {
-                    if (cadetList[i].shiftAmounts < baseShifts) {
+                    if ((overWorked == false) || noOneLeftForThird) {
                         chosenWeek.assignShift(2, 3, cadetList[i]);
                         // cadetList[i].shiftAmounts++;
                     }
@@ -695,12 +768,12 @@ function minimumNumberOfShifts(cadetList) {
     return min;
 }
 
-function equalNumberOfShifts(cadetList) {
+function metMinimumNumOfShifts(cadetList) {
     let variations = 0;
     if (Array.isArray(cadetList)) {
         for (let i = 0; i < cadetList.length; i++) {
             if (i != 0) {
-                if (cadetList[i].shiftAmounts != cadetList[i - 1].shiftAmounts) {
+                if (cadetList[i].shiftAmounts < baseShifts) {
                     variations++;
                 }
             }
@@ -710,7 +783,7 @@ function equalNumberOfShifts(cadetList) {
         return false;
     }
     if (variations == 0) {
-        console.log("\n\nEveryone has same number of shifts\n\n");
+        console.log("\n\nEveryone has met the minimum number of shifts\n\n");
         return true;
     }
     if (!(variations != 0) && !(variations == 0)) {
@@ -722,6 +795,9 @@ function equalNumberOfShifts(cadetList) {
 }
 
 function createRoster() {
+    for (let l = 0; l < week.length; l++) {
+        week[l].clearShifts();
+    }
     for (let i = 0; i < 5; i++) {
         if (i != 2) { //2 means that it is a Wednesday
             shuffle(cadetList);
@@ -732,12 +808,13 @@ function createRoster() {
         } else if (i == 2) { //On Wednesday, a different set of shifts are made 
             shuffle(cadetList);
             AssignWednesdayShifts(cadetList, week[2]);
-            AssignBreakfastShifts(cadetList, week[2]);
-            AssignDinnerShifts(cadetList, week[2]);
+            AssignBreakfastShifts(cadetList, week[i]);
+            AssignDinnerShifts(cadetList, week[i]);
         }
     }
 
-    for (let j = 0; j < 3; j++) {
+
+    for (let j = 0; j < 5; j++) {
         console.log("\n\n\n\n\n\------------\n");
         console.log(`${week[j].day} has: \n`);
         week[j].displayAllShifts();
