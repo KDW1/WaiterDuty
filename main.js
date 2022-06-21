@@ -10,6 +10,23 @@ warningText.style.display = "none";
 
 let deleteButtons = document.getElementsByClassName("delete-cell");
 
+let dailyTables = ["mondayTable", "tuesdayTable", "wednesdayTable", "thursdayTable", "fridayTable"];
+
+function makeRowBasedOnShifts(dayNum, shifts, timePeriod) {
+    let tableToAddTo = document.getElementById(dailyTables[dayNum-1]);
+    let listOfCadetsOnShift = "";
+    for (let i = 0; i < shifts.length; i++) {
+        if (i != (shifts.length - 1)) {
+            listOfCadetsOnShift += shifts[i].assignedPerson + ", ";
+        } else {
+            listOfCadetsOnShift += shifts[i].assignedPerson;
+        }
+    }
+    let row = document.createElement("tr");
+    let rowContent = `<th>${timePeriod}</th><th>${listOfCadetsOnShift}</th>`;
+    row.append(rowContent);
+    tableToAddTo.innerHTML += rowContent;
+}
 function getLunchTime(num) {
     switch (num) {
         case 0:
@@ -95,7 +112,8 @@ function updateDeleteButtons() {
             while (rowParent.tagName != "TR") {
                 rowParent = rowParent.parentNode;
             }
-            cadetList.splice(cadetList.findIndex(rowParent.firstChild.innerText), 1);
+            let lookingFor = rowParent.firstChild.innerText;
+            cadetList.splice(cadetList.findIndex(data => data.name == lookingFor), 1);
             rowParent.remove();
         });
     }
@@ -392,52 +410,188 @@ class Day {
     }
 
     displayAllShifts() {
+        makeRowBasedOnShifts(this.dayNum, this.breakfast, "Breakfast");
         for (let i = 0; i < 5; i++) {
             console.log("Breakfast---------");
             this.logShift(this.breakfast[i]);
         }
-        for (let i = 0; i < 7; i++) {
-            if (this.wednesday.length > 0) {
-                console.log("Wednesday Lunch---------");
-                this.logShift(this.wednesday[i]);
-            }
+        if (this.day == "Wednesday") {
+            makeRowBasedOnShifts(this.dayNum, this.wednesday, "Wednesday");
         }
-        if (this.day != "Wednesday") {
+            for (let i = 0; i < 7; i++) {
+                if (this.wednesday.length > 0) {
+                    console.log("Wednesday Lunch---------");
+
+                    this.logShift(this.wednesday[i]);
+                }
+            }
+            if (this.day != "Wednesday") {
+                makeRowBasedOnShifts(this.dayNum, this.lunches.firstLunch, "1st Lunch");
+                for (let i = 0; i < 3; i++) {
+                    console.log("First Lunch---------");
+                    this.logShift(this.lunches.firstLunch[i]);
+                }
+                makeRowBasedOnShifts(this.dayNum, this.lunches.secondLunch, "2nd Lunch");
+                for (let i = 0; i < 3; i++) {
+                    console.log("Second Lunch---------");
+                    this.logShift(this.lunches.secondLunch[i]);
+                }
+                makeRowBasedOnShifts(this.dayNum, this.lunches.thirdLunch, "3rd Lunch");
+                for (let i = 0; i < 3; i++) {
+                    console.log("Third Lunch---------");
+                    this.logShift(this.lunches.thirdLunch[i]);
+                }
+            }
+            makeRowBasedOnShifts(this.dayNum, this.dinners.firstDinner, "1st Dinner");
             for (let i = 0; i < 3; i++) {
-                console.log("First Lunch---------");
-                this.logShift(this.lunches.firstLunch[i]);
+                console.log("First Dinner---------");
+                this.logShift(this.dinners.firstDinner[i]);
             }
-            for (let i = 0; i < 3; i++) {
-                console.log("Second Lunch---------");
-                this.logShift(this.lunches.secondLunch[i]);
-            }
-            for (let i = 0; i < 3; i++) {
-                console.log("Third Lunch---------");
-                this.logShift(this.lunches.thirdLunch[i]);
+            makeRowBasedOnShifts(this.dayNum, this.dinners.secondDinner, "2nd Dinner");
+            for (let i = 0; i < 2; i++) {
+                console.log("Second Dinner---------");
+                this.logShift(this.dinners.secondDinner[i]);
             }
         }
-        for (let i = 0; i < 3; i++) {
-            console.log("First Dinner---------");
-            this.logShift(this.dinners.firstDinner[i]);
-        }
-        for (let i = 0; i < 2; i++) {
-            console.log("Second Dinner---------");
-            this.logShift(this.dinners.secondDinner[i]);
-        }
+
+        clearShifts() {
+            this.breakfast = [];
+            this.dinners.firstDinner = [];
+            this.dinners.secondDinner = [];
+            if (this.day == "Wednesday") {
+                this.wednesday = []
+            } else {
+                this.lunches.firstLunch = [];
+                this.lunches.secondLunch = [];
+                this.lunches.thirdLunch = [];
+            }
     }
 
-    clearShifts() {
-        this.breakfast = [];
-        this.dinners.firstDinner = [];
-        this.dinners.secondDinner = [];
-        if (this.day == "Wednesday") {
-            this.wednesday = []
-        } else {
-            this.lunches.firstLunch = [];
-            this.lunches.secondLunch = [];
-            this.lunches.thirdLunch = [];
-        }
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 class Shift {
