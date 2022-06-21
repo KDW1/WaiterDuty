@@ -1,4 +1,8 @@
 
+import { helloWorld } from '../document.js';
+
+helloWorld("Dude");
+
 window.onbeforeunload = function () {
     return "Do?";
 };

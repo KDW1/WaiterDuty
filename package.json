@@ -22,5 +22,9 @@
   "homepage": "https://github.com/KDW1/WaiterDuty#readme",
   "devDependencies": {
     "g-sheets-api": "^2.1.2"
+  },
+  "dependencies": {
+    "docx": "^7.3.0",
+    "file-saver": "^2.0.5"
   }
 }
