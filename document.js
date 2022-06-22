@@ -1,3 +1,2 @@
-function helloWorld(author) {
-    console.log(`Hello World, -${author}`);
-}
+import { Document, Packer } from 'docx'
+import { saveAs } from 'file-saver'
