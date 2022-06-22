@@ -24,6 +24,7 @@ app.get('/main.js', function (req, res) {
 
 //app.use('/', express.static('public'));
 
+express.static.mime.define({ 'application/javascript': ['js'] });
 
 app.listen(port);
 console.log('Server started at http://localhost:' + port);
