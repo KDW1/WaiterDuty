@@ -1,5 +1,5 @@
 
-import { helloWorld } from '../document.js';
+//import { helloWorld } from '../document.js';
 
 helloWorld("Dude");
 
@@ -31,6 +31,7 @@ function makeRowBasedOnShifts(dayNum, shifts, timePeriod) {
     row.append(rowContent);
     tableToAddTo.innerHTML += rowContent;
 }
+
 function getLunchTime(num) {
     switch (num) {
         case 0:
@@ -77,6 +78,7 @@ function createRowBasedOnCadet(cadet) {
     tableBody.innerHTML += rowContent;
     updateDeleteButtons();
 }
+
 function presetCadetList() { //To be called from the console | 0 -> "Free Lunch Period" | 5 -> "Not Available"
     console.log("\nLoading Preset Cadet List");
     let gageS = new Cadet("Gage Smith", 1, 1, 2, 2);
@@ -145,13 +147,14 @@ function returnLunchTime(inputedVal) {
 
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
-})
+});
 
 function clearTable() {
     let tableBody = document.getElementById("tableBody");
     tableBody.innerHTML = "";
     cadetList = "";
 }
+
 function updateStudents() {
     let tableBody = document.getElementById("tableBody");
     localStorage.setItem("tableBodyContent", tableBody.innerHTML);
@@ -470,132 +473,6 @@ class Day {
                 this.lunches.thirdLunch = [];
             }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 class Shift {
