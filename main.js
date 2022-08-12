@@ -116,6 +116,7 @@ function updateDeleteButtons() {
                 rowParent = rowParent.parentNode;
             }
             let lookingFor = rowParent.firstChild.innerText;
+            console.log(lookingFor);
             cadetList.splice(cadetList.findIndex(data => data.name == lookingFor), 1);
             rowParent.remove();
         });
@@ -420,7 +421,7 @@ class Day {
             this.logShift(this.breakfast[i]);
         }
         if (this.day == "Wednesday") {
-            makeRowBasedOnShifts(this.dayNum, this.wednesday, "Wednesday");
+            makeRowBasedOnShifts(this.dayNum, this.wednesday, "Wednesday Lunch");
         }
             for (let i = 0; i < 7; i++) {
                 if (this.wednesday.length > 0) {
