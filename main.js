@@ -15,6 +15,7 @@ let dailyTables = ["mondayTable", "tuesdayTable", "wednesdayTable", "thursdayTab
 
 function makeRowBasedOnShifts(dayNum, shifts, timePeriod) {
     let tableToAddTo = document.getElementById(dailyTables[dayNum-1]);
+    tableToAddTo.innerHTML = "";
     let listOfCadetsOnShift = "";
     for (let i = 0; i < shifts.length; i++) {
         if (i != (shifts.length - 1)) {
